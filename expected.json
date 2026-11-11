@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "url": "https://example.com/research",
+      "host": "example.com",
+      "flags": [],
+      "indicator_score": 0,
+      "verdict": "no-structural-flags"
+    },
+    {
+      "url": "http://192.0.2.44/login",
+      "host": "192.0.2.44",
+      "flags": [
+        "unencrypted-scheme",
+        "ip-literal-host"
+      ],
+      "indicator_score": 40,
+      "verdict": "review"
+    },
+    {
+      "url": "https://trusted.example@untrusted.example/?token=synthetic-demo",
+      "host": "untrusted.example",
+      "flags": [
+        "embedded-userinfo",
+        "sensitive-query-key"
+      ],
+      "indicator_score": 40,
+      "verdict": "review"
+    }
+  ],
+  "network_requests": 0
+}

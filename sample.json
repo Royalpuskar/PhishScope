@@ -1,0 +1,7 @@
+{
+  "urls": [
+    "https://example.com/research",
+    "http://192.0.2.44/login",
+    "https://trusted.example@untrusted.example/?token=synthetic-demo"
+  ]
+}
