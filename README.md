@@ -18,7 +18,9 @@ Explain suspicious URL structure without opening the destination. This project m
 
 ## Implemented features
 
-HTTP scheme checks; embedded-userinfo detection; IP-literal and punycode flags; host depth and sensitive-query checks; explainable indicator scores.
+HTTP scheme checks; embedded-userinfo detection; IP-literal and punycode flags; host depth and sensitive-query checks; explainable indicator scores. Unicode hostnames are rendered as ASCII IDNA labels in the Python output to align the shared contract with the browser URL parser for tested IDNs.
+
+The **Unicode IDN** preset inspects `https://bücher.example/path`. Both implementations expose its canonical punycode hostname (`xn--bcher-kva.example`) and mark it for review. Internationalized domains are not inherently malicious; this is a structural signal only.
 
 The responsive website runs locally in your browser, accepts editable JSON scenarios, includes preset cases, renders structured results, and exports a JSON report. It has no external runtime dependencies, analytics, external fonts, model API calls or API-key requirement.
 
@@ -30,7 +32,7 @@ Requires Python 3.10+ for the development server. From this directory:
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open `http://localhost:8000`. Use **Run analysis** to evaluate the sample; change a scenario and run again. **Export report** downloads the current result. Serve over localhost or HTTPS so Web Crypto is available. Opening `index.html` directly as a file is not supported because the application uses JavaScript modules.
+Open `http://localhost:8000`. Use **Unicode IDN** to inspect an internationalized hostname, or try the other presets for empty input, a plain domain, and an IPv4 address. Use **Run analysis** to evaluate a scenario and **Export report** to download the current result. Serve over localhost or HTTPS so Web Crypto is available. Opening `index.html` directly as a file is not supported because the application uses JavaScript modules.
 
 ## Command-line usage
 
@@ -66,7 +68,7 @@ Flow: user edits a scenario → JSON parsing and bounded-input checks → projec
 
 ## Security, privacy and limitations
 
-Structural heuristics are not a phishing verdict, reputation lookup or probability estimate. A clean-looking URL can be malicious; flagged URLs can be legitimate. No destination is fetched and redirects, certificates and page contents are not inspected.
+Structural heuristics are not a phishing verdict, reputation lookup or probability estimate. A clean-looking URL can be malicious; flagged URLs can be legitimate. Python's standard-library IDNA codec and the browser WHATWG URL parser can differ on some Unicode code points; the shared fixture covers a basic IDN but does not establish equivalence for every internationalized hostname. No destination is fetched and redirects, certificates and page contents are not inspected.
 
 Scenario data stays in browser memory. The app makes no analysis network requests and stores no inputs in local storage. A hosting provider can still receive ordinary page requests and access logs. Avoid entering real secrets or sensitive evidence; downloaded reports contain your input and results. HTML from scenarios is rendered as text, never executed. Limits cap browser inputs at 100 KB, 1,000 array elements and 15 nesting levels; these limits are prototype safeguards, not a complete denial-of-service defense.
 
@@ -88,3 +90,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and [LICENSE]
 
 © 2026 Puskar (Royalpuskar). All rights reserved except the permissions expressly granted by this repository’s MIT License. Third-party rights and notices remain with their owners.
 <!-- portfolio-rights:end -->
+

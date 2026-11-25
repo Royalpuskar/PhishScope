@@ -89,5 +89,26 @@
       ],
       "network_requests": 0
     }
+  },
+  {
+    "input": {
+      "urls": [
+        "https://bücher.example/path"
+      ]
+    },
+    "expected": {
+      "results": [
+        {
+          "url": "https://bücher.example/path",
+          "host": "xn--bcher-kva.example",
+          "flags": [
+            "internationalized-host"
+          ],
+          "indicator_score": 20,
+          "verdict": "review"
+        }
+      ],
+      "network_requests": 0
+    }
   }
 ]

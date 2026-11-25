@@ -9,12 +9,18 @@ def analyze(data):
         flags=[]
         try:
             url=urlsplit(raw)
-            host=url.hostname or ''
+            host=(url.hostname or '').lower()
             if url.scheme not in ('http','https') or not host: raise ValueError('Only absolute HTTP(S) URLs supported')
             if url.scheme != 'https': flags.append('unencrypted-scheme')
             if url.username is not None: flags.append('embedded-userinfo')
-            try: ipaddress.ip_address(host); flags.append('ip-literal-host')
-            except ValueError: pass
+            try:
+                ipaddress.ip_address(host)
+                is_ip=True
+            except ValueError:
+                is_ip=False
+                try: host=host.encode('idna').decode('ascii').lower()
+                except UnicodeError as error: raise ValueError('Host cannot be encoded as an IDNA hostname') from error
+            if is_ip: flags.append('ip-literal-host')
             if any(part.startswith('xn--') for part in host.split('.')): flags.append('internationalized-host')
             if len(host.split('.'))>4: flags.append('deep-subdomain')
             if any(k.lower() in ('password','token','secret','api_key') for k,v in parse_qsl(url.query)): flags.append('sensitive-query-key')
@@ -38,3 +44,4 @@ if __name__ == '__main__':
     except (ValueError, TypeError, KeyError, OSError) as error:
         print('Input error: '+str(error), file=sys.stderr)
         sys.exit(2)
+
